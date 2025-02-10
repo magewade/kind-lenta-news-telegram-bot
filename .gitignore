@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.venv/
+# Игнорируем файл .env
+.env
+# Но .env.example отслеживаем
+!.env.example
+*.log
+*.db
