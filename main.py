@@ -1,13 +1,10 @@
 import asyncio
 import os
 from dotenv import load_dotenv
-import aiohttp
 
 load_dotenv()
 
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message
-from aiogram.filters import CommandStart, Command
 from handlers.user import user
 
 

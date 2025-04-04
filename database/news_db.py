@@ -5,8 +5,6 @@ import sqlite3
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from model.embeddings import get_bert_embedding
-
-import pickle
 import numpy as np
 
 # Перевод месяцев
