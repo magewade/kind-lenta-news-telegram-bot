@@ -17,7 +17,10 @@ async def main():
 
 if __name__ == "__main__":
     print("It's alive!")
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        print("Bot stopped!")
+    if os.getenv("RUN_PARSER") == "1":
+        import model.parsing
+    else:
+        try:
+            asyncio.run(main())
+        except KeyboardInterrupt:
+            print("Bot stopped!")
