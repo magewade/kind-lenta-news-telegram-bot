@@ -10,5 +10,4 @@ venv/
 # Но .env.example отслеживаем
 !.env.example
 *.log
-*.db
 .DS_Store
