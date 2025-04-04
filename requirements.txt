@@ -42,9 +42,15 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.0.0
 pyzmq==26.2.1
 requests==2.32.3
+selenium==4.30.0
+sentence-transformers==4.0.2
 six==1.17.0
 soupsieve==2.6
 stack-data==0.6.3
+transformers==4.50.3
+datasets==3.5.0
+torch==2.6.0
+scikit-learn==1.6.1
 tornado==6.4.2
 traitlets==5.14.3
 typing_extensions==4.7.1
