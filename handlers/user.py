@@ -29,7 +29,7 @@ user = Router()
 async def start(message: Message):
     image_url = "https://i.imgur.com/ZgCqwJc.jpeg"
     text = """Привет! 
-Напиши о чем хочешь почитать новости или нажми кнопку, чтобы почитать всё подряд
+НАПИШИ о чем хочешь почитать новости или НАЖМИ кнопку, чтобы почитать всё подряд
     """
 
     await message.bot.send_chat_action(
