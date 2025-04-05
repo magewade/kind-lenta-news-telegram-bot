@@ -196,7 +196,7 @@ def get_news_embeddings_from_db(cursor, limit=1000, offset=0):
     return news_texts, np.array(news_embeddings)
 
 
-def search_news_by_keyword(keyword, limit=1000, offset=0, similarity_threshold=0.3):
+def search_news_by_keyword(keyword, limit=50, offset=0, similarity_threshold=0.2):
     conn = sqlite3.connect("news_database.db")
     cursor = conn.cursor()
 

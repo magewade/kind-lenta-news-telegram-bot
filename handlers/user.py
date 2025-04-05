@@ -16,6 +16,11 @@ from database.news_db import (
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from datetime import datetime
 from aiogram.filters import Command
+from collections import defaultdict
+
+# Кэш для хранения результатов поиска
+user_search_results = defaultdict(list)
+
 
 user = Router()
 
@@ -426,30 +431,33 @@ async def cat_command(message: Message):
 async def search_news(message: Message):
     print("Получено сообщение для поиска новостей:", message.text)
 
-    # Отправляем действие "печатает"
     await message.bot.send_chat_action(
         chat_id=message.from_user.id, action=ChatAction.TYPING
     )
 
-    # Используем введённое сообщение как ключевое слово для поиска новостей
+    await message.answer("Ищу новости...")
+
+    await message.bot.send_chat_action(
+        chat_id=message.from_user.id, action=ChatAction.TYPING
+    )
+
     query = message.text.strip()
 
-    # Проверим, что строка не пустая
     if not query:
         await message.answer("Пожалуйста, введите тему для поиска новостей.")
         return
 
-    # Ищем новости по запросу (все новости сразу)
+    # Выполняем поиск и сохраняем результат в кэш
     news = search_news_by_keyword(query)
 
     if not news:
         await message.answer(f"Не найдено новостей по запросу: {query} 😕")
         return
 
-    # Отправляем первую новость и кнопку для перехода к следующей порции
-    news_item = news[0]  # Получаем первую новость
-    print(news_item)
+    # Кэшируем результат для данного пользователя и запроса
+    user_search_results[(message.from_user.id, query)] = news
 
+    news_item = news[0]
     formatted_date = datetime.strptime(news_item["date"], "%Y-%m-%d %H:%M:%S").strftime(
         "%d.%m.%Y, %H:%M"
     )
@@ -461,9 +469,8 @@ async def search_news(message: Message):
         f"{news_item['similarity']:.2f}% похоже на запрос"
     )
 
-    # Первая новость, с которой можно начать поиск
     next_button = InlineKeyboardButton(
-        text="Еще новости", callback_data=f"next_search_news_1_search_{query}_0"
+        text="Еще новости", callback_data=f"next_search_news_1_search_{query}"
     )
     keyboard = InlineKeyboardMarkup(inline_keyboard=[[next_button]])
 
@@ -476,33 +483,24 @@ async def show_next_search_news(callback: CallbackQuery):
         chat_id=callback.from_user.id, action=ChatAction.TYPING
     )
 
-    # Разбираем данные из callback_data
     parts = callback.data.split("_")
-
     try:
-        # Извлекаем индекс текущей новости и запрос
-        current_news_index = int(parts[3])  # Индекс новости
-        query = parts[5]  # Запрос (может быть несколько частей)
+        current_news_index = int(parts[3])
+        query = "_".join(
+            parts[5:]
+        )  # На случай, если в запросе есть пробелы/подчеркивания
     except (IndexError, ValueError):
         await callback.message.answer("Ошибка в данных для следующей новости.")
         return
 
-    # Ищем новости с учетом смещения
-    news = search_news_by_keyword(query, offset=current_news_index)
+    key = (callback.from_user.id, query)
+    news = user_search_results.get(key)
 
-    if not news:
-        await callback.message.answer("Больше новостей нет по запросу нет 😕")
-        return
-
-    # Проверка, если новостей меньше, чем индекс следующей новости
-    if current_news_index >= len(news):
+    if not news or current_news_index >= len(news):
         await callback.message.answer("Больше новостей по запросу нет 😕")
         return
 
-    # Получаем следующую новость
-    # Здесь мы используем current_news_index для правильного извлечения следующей новости
-    next_news_item = news[current_news_index]  # Получаем следующую новость из списка
-
+    next_news_item = news[current_news_index]
     formatted_date = datetime.strptime(
         next_news_item["date"], "%Y-%m-%d %H:%M:%S"
     ).strftime("%d.%m.%Y, %H:%M")
@@ -514,7 +512,6 @@ async def show_next_search_news(callback: CallbackQuery):
         f"{next_news_item['similarity']:.2f}% похоже на запрос"
     )
 
-    # Кнопка для следующей новости
     next_button = InlineKeyboardButton(
         text="Еще новости",
         callback_data=f"next_search_news_{current_news_index + 1}_search_{query}",

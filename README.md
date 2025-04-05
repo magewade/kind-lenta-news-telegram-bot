@@ -1,8 +1,8 @@
-
-
 # Kind Lenta.ru Telegram Bot
 
 Этот проект представляет собой Telegram-бота, который парсит новости с сайта ****Lenta.ru****, используя тумблер **Добрая Лента**. Бот может выдавать новости по дням или по любому текстовому запросу. Для обработки запросов и поиска по теме используется модель **sberbank-ai/sbert_large_nlu_ru**.
+
+Проект задеплоен на railway.com, поэтому инференс модели при поиске новости по теме может выполняться медленно.
 
 ## Описание
 
@@ -27,7 +27,7 @@
   * embeddings.py
   * model.ipynb
   * parsing.py
-* `news.db`: База данных SQLite для хранения новостей и эмбеддингов.
+* `news_database.db`: База данных SQLite для хранения новостей и эмбеддингов.
 
 ---
 
@@ -46,8 +46,8 @@
 Для запуска бота локально следуйте этим шагам:
 
 ```bash
-$ git clone https://github.com/yourusername/lenta-news-bot.git
-$ cd lenta-news-bot
+$ git clone https://github.com/yourusername/kind-lenta-news-telegram-bot.git
+$ cd  kind-lenta-news-telegram-bot
 $ python -m venv venv
 $ source venv/bin/activate   # Для Windows: venv\Scripts\activate
 $ pip install -r requirements.txt
