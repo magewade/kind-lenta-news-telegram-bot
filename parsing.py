@@ -312,7 +312,6 @@ parse_articles_by_topic()
 
 update_missing_embeddings(conn)
 
-
 update_normalized_dates()
 
 # Закрытие соединения
