@@ -231,6 +231,3 @@ def search_news_by_keyword(keyword, limit=1000, offset=0, similarity_threshold=0
     # Сортируем по сходству и возвращаем результаты
     results.sort(key=lambda x: x["similarity"], reverse=True)
     return results[:limit]  # Возвращаем только нужное количество
-
-
-update_normalized_dates()

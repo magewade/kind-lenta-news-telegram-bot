@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 from model.embeddings import update_missing_embeddings
+from database.news_db import update_normalized_dates
 
 SLEEP = 2
 BASE_URL = "https://lenta.ru/"
@@ -310,6 +311,9 @@ print("Начало парсинга статей по темам.")
 parse_articles_by_topic()
 
 update_missing_embeddings(conn)
+
+
+update_normalized_dates()
 
 # Закрытие соединения
 conn.close()
