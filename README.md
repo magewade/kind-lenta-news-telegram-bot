@@ -15,21 +15,18 @@
 ## **Файлы:**
 
 * `main.py`: Основной скрипт для запуска Telegram-бота, который обрабатывает сообщения и выполняет парсинг новостей.
-* news_database.db:
-* `requirements.txt`: Содержит необходимые Python-пакеты и зависимости.
-* `/database `папка:
-  * news_db.py
-* `/handler `папка:
-  * users.py
-* /keyboards:
-  * userkb.py
-* /model
-  * embeddings.py
-  * model.ipynb
-  * parsing.py
+* `parsing.py`: Скрипт для парсинга новостей, добавления их в базу и отстройки эмбеддингов.
 * `news_database.db`: База данных SQLite для хранения новостей и эмбеддингов.
-
----
+* `requirements.txt`: Содержит необходимые Python-пакеты и зависимости.
+* `/database`: Папка:
+  * `news_db.py`
+* `/handler`: Папка:
+  * `users.py`
+* `/keyboards`: Папка:
+  * `userkb.py`
+* `/model`: Папка:
+  * `embeddings.py`
+  * `model.ipynb`
 
 ### Как это работает:
 
@@ -51,5 +48,6 @@ $ cd  kind-lenta-news-telegram-bot
 $ python -m venv venv
 $ source venv/bin/activate   # Для Windows: venv\Scripts\activate
 $ pip install -r requirements.txt
+$ python model/parsing.py # To parse news
 $ python main.py
 ```

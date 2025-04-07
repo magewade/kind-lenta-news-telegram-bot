@@ -18,7 +18,7 @@ async def main():
 if __name__ == "__main__":
     print("It's alive!")
     if os.getenv("RUN_PARSER") == "1":
-        import model.parsing
+        import parsing
     else:
         try:
             asyncio.run(main())
