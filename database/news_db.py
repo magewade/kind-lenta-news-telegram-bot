@@ -165,7 +165,7 @@ import pickle
 import numpy as np
 
 
-def get_news_embeddings_from_db(cursor, limit=10, offset=0):
+def get_news_embeddings_from_db(cursor, limit=100, offset=0):
     query = """
     SELECT id, title, url, subtitle, content, normalized_date, embedding
     FROM articles
@@ -180,7 +180,6 @@ def get_news_embeddings_from_db(cursor, limit=10, offset=0):
 
     for news_item in news:
         news_id, title, url, subtitle, content, date, embedding_blob = news_item
-        print(title)
 
         # Восстанавливаем эмбеддинг из байтов
         embedding = np.frombuffer(embedding_blob, dtype=np.float32)
