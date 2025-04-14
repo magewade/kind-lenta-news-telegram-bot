@@ -47,7 +47,7 @@ model = load_model()
 #     with st.spinner("Парсим новости..."):
 #         run_parsing()
 #     st.success("✅ Новости обновлены!")
-    # Уведомление о задержке в парсинге
+# Уведомление о задержке в парсинге
 st.info(
     "Это демонстрация работы, и новости могут быть отпарсены с задержкой во времени. Пожалуйста, имейте в виду, что новости за 'сегодня' или 'вчера' будут отображаться от последнего доступного дня."
 )
@@ -181,6 +181,9 @@ with tab2:
 # --- ТАБ 3: Статистика ---
 with tab3:
     st.header("📊 Статистика новостей")
+    st.info(
+        "Для подгрузки некоторых графиков, типа облака слов, требуется время. Пожалуйста, подождите."
+    )
 
     # Определение ваших цветов
     colors = ["#D28782", "#EBC678", "#B4C6D0", "#1B78AF"]
@@ -207,6 +210,26 @@ with tab3:
     ax.set_ylabel("Количество", fontsize=14)
     plt.xticks(rotation=45)
     st.pyplot(fig, use_container_width=False)
+
+    # Показать статистику по тегам (гистограмма по категориям)
+    if "tag" in df.columns:
+        st.subheader("Распределение новостей по тегам")
+        tag_counts = df["tag"].value_counts()
+        fig_tags, ax_tags = plt.subplots(figsize=(15, 7))
+        ax_tags.bar(
+            tag_counts.index,
+            tag_counts.values,
+            color=cmap(
+                np.linspace(0, 1, len(tag_counts))
+            ),  # Преобразуем cmap в список цветов
+        )
+        ax_tags.set_title(
+            "Количество новостей по тегам", fontsize=16, color="black"
+        )  # Черный цвет для заголовка
+        ax_tags.set_xlabel("Тег", fontsize=14)
+        ax_tags.set_ylabel("Количество", fontsize=14)
+        plt.xticks(rotation=90)
+        st.pyplot(fig_tags, use_container_width=False)
 
     # Облако слов по всем новостям без стоп-слов
     all_texts = " ".join(df["content"].dropna())
@@ -242,23 +265,3 @@ with tab3:
         ax_topics.set_ylabel("Количество", fontsize=14)
         plt.xticks(rotation=90)
         st.pyplot(fig_topics, use_container_width=False)
-
-    # Показать статистику по тегам (гистограмма по категориям)
-    if "tag" in df.columns:
-        st.subheader("Распределение новостей по тегам")
-        tag_counts = df["tag"].value_counts()
-        fig_tags, ax_tags = plt.subplots(figsize=(15, 7))
-        ax_tags.bar(
-            tag_counts.index,
-            tag_counts.values,
-            color=cmap(
-                np.linspace(0, 1, len(tag_counts))
-            ),  # Преобразуем cmap в список цветов
-        )
-        ax_tags.set_title(
-            "Количество новостей по тегам", fontsize=16, color="black"
-        )  # Черный цвет для заголовка
-        ax_tags.set_xlabel("Тег", fontsize=14)
-        ax_tags.set_ylabel("Количество", fontsize=14)
-        plt.xticks(rotation=90)
-        st.pyplot(fig_tags, use_container_width=False)
