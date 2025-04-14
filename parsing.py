@@ -11,6 +11,7 @@ from datetime import datetime
 from model.embeddings import update_missing_embeddings
 from webdriver_manager.chrome import ChromeDriverManager
 from database.news_db import update_normalized_dates
+from selenium.webdriver.chrome.service import Service
 
 SLEEP = 2
 BASE_URL = "https://lenta.ru/"
@@ -127,7 +128,8 @@ def run_parsing():
     chrome_options.add_argument("disable-dev-shm-usage")
     chrome_options.add_argument("--disable-dev-shm-usage")  # Чтобы избежать ошибок с памятью
     chrome_options.add_argument("--disable-gpu")  # Для обхода проблем с GPU
-    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.set_page_load_timeout(300)
 
     def get_topics():
