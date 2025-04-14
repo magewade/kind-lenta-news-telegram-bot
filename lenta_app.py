@@ -12,7 +12,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 from model.nltk_stopwords import russian_stopwords
 from pymorphy2 import MorphAnalyzer
-import re 
+import re
 
 morph = MorphAnalyzer()
 
@@ -25,7 +25,6 @@ def lemmatize_text(text):
     ]
     return " ".join(lemmas)
 
-
 # Загрузка данных из базы данных
 def load_articles_from_db(path_to_db="news_database.db"):
     conn = sqlite3.connect(path_to_db)
@@ -34,24 +33,24 @@ def load_articles_from_db(path_to_db="news_database.db"):
     df["normalized_date"] = pd.to_datetime(df["normalized_date"], errors="coerce")
     return df
 
-
 st.set_page_config(page_title="Новости", layout="wide")
 st.title("🗞️ Добрые новости с сайта Lenta.ru")
-
 
 @st.cache_resource
 def load_model():
     return SentenceTransformer("sberbank-ai/sbert_large_nlu_ru")
 
-
 model = load_model()
 
-
-# Кнопка для запуска парсинга
-if st.button("🔃 Обновить новости"):
-    with st.spinner("Парсим новости..."):
-        run_parsing()
-    st.success("✅ Новости обновлены!")
+# # Кнопка для запуска парсинга
+# if st.button("🔃 Обновить новости"):
+#     with st.spinner("Парсим новости..."):
+#         run_parsing()
+#     st.success("✅ Новости обновлены!")
+    # Уведомление о задержке в парсинге
+st.info(
+    "Это демонстрация работы, и новости могут быть отпарсены с задержкой во времени. Пожалуйста, имейте в виду, что новости за 'сегодня' или 'вчера' будут отображаться от последнего доступного дня."
+)
 
 # Загрузка данных
 df = load_articles_from_db()
@@ -142,23 +141,26 @@ with tab1:
 # --- ТАБ 2: Новости по дате ---
 with tab2:
     st.header("🗓️ Фильтр по дате")
+    
+
+    # Получаем самую последнюю дату в базе
+    last_date = df["normalized_date"].max().date()
+
     date_filter = st.selectbox(
         "Выберите период:", ("Сегодня", "Вчера", "Более ранние новости")
     )
 
     def filter_news_by_date(date_filter):
         if date_filter == "Сегодня":
-            today = datetime.today().date()
-            filtered_df = df[df["normalized_date"].dt.date == today]
+            filtered_df = df[df["normalized_date"].dt.date == last_date]
         elif date_filter == "Вчера":
-            yesterday = (datetime.today() - timedelta(days=1)).date()
+            yesterday = last_date - timedelta(days=1)
             filtered_df = df[df["normalized_date"].dt.date == yesterday]
         else:
             filtered_df = df[
                 df["normalized_date"].dt.date
-                < (datetime.today() - timedelta(days=1)).date()
+                < (last_date - timedelta(days=1)).date()
             ]
-
         return filtered_df.sort_values(by="normalized_date", ascending=False)
 
     filtered_news = filter_news_by_date(date_filter)
