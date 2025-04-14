@@ -15,12 +15,12 @@ async def main():
     await dp.start_polling(bot)
 
 
-if __name__ == "__main__":
-    print("It's alive!")
-    if os.getenv("RUN_PARSER") == "1":
-        import parsing
-    else:
-        try:
-            asyncio.run(main())
-        except KeyboardInterrupt:
-            print("Bot stopped!")
+# if __name__ == "__main__":
+#     print("It's alive!")
+#     if os.getenv("RUN_PARSER") == "1":
+#         import parsing
+#     else:
+#         try:
+#             asyncio.run(main())
+#         except KeyboardInterrupt:
+#             print("Bot stopped!")
