@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 from model.embeddings import update_missing_embeddings
+from webdriver_manager.chrome import ChromeDriverManager
 from database.news_db import update_normalized_dates
 
 SLEEP = 2
@@ -126,7 +127,7 @@ def run_parsing():
     chrome_options.add_argument("disable-dev-shm-usage")
     chrome_options.add_argument("--disable-dev-shm-usage")  # Чтобы избежать ошибок с памятью
     chrome_options.add_argument("--disable-gpu")  # Для обхода проблем с GPU
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
     driver.set_page_load_timeout(300)
 
     def get_topics():
